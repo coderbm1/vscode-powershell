@@ -104,14 +104,17 @@ export class PowerShellProcess {
         utils.deleteSessionFile(this.sessionFilePath);
 
         // Launch PowerShell in the integrated terminal
-        this.consoleTerminal =
-            vscode.window.createTerminal({
-                name: this.title,
-                shellPath: this.exePath,
-                shellArgs: powerShellArgs,
-                hideFromUser: !this.sessionSettings.integratedConsole.showOnStartup,
-                cwd: this.sessionSettings.cwd
-            });
+        const terminalOptions = {
+            name: this.title,
+            shellPath: this.exePath,
+            shellArgs: powerShellArgs,
+            hideFromUser: !this.sessionSettings.integratedConsole.showOnStartup,
+            cwd: this.sessionSettings.cwd,
+            disablePersistence: true,
+            // isTransient: true
+        };
+
+        this.consoleTerminal = vscode.window.createTerminal(terminalOptions);
 
         const pwshName = path.basename(this.exePath);
         this.log.write(`${pwshName} started.`);
